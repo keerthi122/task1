@@ -1,0 +1,316 @@
+import { useState , useEffect } from 'react'
+import './App.css'
+function App() {
+  const [todos, setTodos] = useState([]); 
+  const [newTodo, setNewTodo] = useState(""); 
+  const [editIndex, setEditIndex] = useState(null); 
+  const [search, setSearch] = useState(""); 
+
+  const handleAddOrUpdate = () => {
+    if (!newTodo.trim()) return;
+
+    if (editIndex !== null) {
+      const updatedTodos = [...todos];
+      updatedTodos[editIndex] = newTodo;
+      setTodos(updatedTodos);
+      setEditIndex(null);
+    } else {
+ 
+      setTodos([...todos, newTodo]);
+    }
+    setNewTodo("");
+  };
+
+
+  const handleDelete = (index) => {
+    setTodos(todos.filter((_, i) => i !== index));
+  };
+
+  const handleEdit = (index) => {
+    setNewTodo(todos[index]);
+    setEditIndex(index);
+  };
+
+
+  const filteredTodos = todos.filter((todo) =>
+    todo.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col items-center p-6 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Todo List</h1>
+
+
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder="Enter a task"
+          className="border p-2 rounded w-64"
+        /> 
+        <button
+          onClick={handleAddOrUpdate}
+          className="class1"
+        >
+          {editIndex !== null ? "Update" : "Add"}
+        </button>
+      </div>
+     <br /> 
+     
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search tasks..."
+        className="border p-2 rounded w-64 mb-4"
+      />
+
+ 
+      <ul className="space-y-2 w-64">
+        {filteredTodos.length > 0 ? (
+          filteredTodos.map((todo, index) => (
+            <li
+              key={index}
+              className="flex justify-between items-center bg-white p-2 rounded shadow"
+            >
+              <span>{todo}</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEdit(index)}
+                  className="text-yellow-600"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="text-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">No tasks found</p>
+        )}
+      </ul>
+    </div>
+  );
+}
+export default App
+
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.app-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+
+input[type="text"] {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #1d1c1c;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 6px rgba(102, 126, 234, 0.5);
+}
+
+
+button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+
+.add-btn {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  color: #323030;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+.add-btn:hover {
+  background: linear-gradient(90deg, #5a67d8, #6b46c1);
+  transform: translateY(-2px);
+}
+
+
+.edit-btn {
+  background: #ffda6a;
+  color: #252424;
+}
+
+.edit-btn:hover {
+  background: #ffc107;
+  transform: translateY(-2px);
+}
+
+
+.delete-btn {
+  background: #f87171;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+
+li {
+  padding: 12px;
+  border-radius: 8px;
+  background: #2c2c2d;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+li:hover {
+  background: #4d4e4e;
+}
+
+
+
+NUMBER 2
+
+                    redux                               ,
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addCustomer } from "./slice";
+
+export default function CustomerAdd() {
+  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+
+  function addCustomerHandler() {
+    if (input) {
+      dispatch(addCustomer(input));
+      setInput("");
+    }
+  }
+
+  return (
+    <div>
+      <h3>ADD CUSTOMER</h3>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={addCustomerHandler}>ADD</button>
+    </div>
+  );
+}
+
+
+import React from "react";
+import { useSelector } from "react-redux";
+
+export default function CustomerView() {
+  const customers = useSelector((state) => state.customer);
+
+  return (
+    <div>
+      <h3>CUSTOMER LIST</h3>
+      <ul style={{ listStyle: "none" }}>
+        {customers.map((cust, index) => (
+          <li key={index}>{cust}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+
+
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = [];
+
+const customerSlice = createSlice({
+  name: "customer",
+  initialState,
+  reducers: {
+    addCustomer(state, action) {
+      state.push(action.payload);
+    }
+  }
+});
+
+export const { addCustomer } = customerSlice.actions;
+export default customerSlice.reducer;
+
+
+
+
+
+import { configureStore } from "@reduxjs/toolkit";
+import customerReducer from "./slice";
+
+export const store = configureStore({
+  reducer: {
+    customer: customerReducer
+  }
+});  
+
+
+
+// import { Provider } from "react-redux";
+// import { store } from "./store";
+// import CustomerAdd from "./CustomerAdd";
+// import CustomerView from "./CustomerView";
+
+ // <Provider store={store}>
+    //   <div>
+    //     <h1>REACT REDUX</h1>
+    //     <CustomerAdd />
+    //     <CustomerView />
+    //   </div>
+    // </Provider>
